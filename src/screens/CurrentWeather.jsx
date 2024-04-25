@@ -2,30 +2,41 @@ import React from "react";
 import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import { Feather } from '@expo/vector-icons';
 import RowText from "../components/RowText";
+import { weatherType } from "../utilities/weatherType";
 
-const CurrentWeather = () => {
+const CurrentWeather = ({ weatherData }) => {
+  const { main: { temp, feels_like, temp_max, temp_min }, weather } = weatherData
+  const condition = weather[0].main
+
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView
+      style={[
+        styles.wrapper,
+        {
+          backgroundColor: weatherType[condition].backgroundColor
+        }
+      ]}
+    >
       <View style={styles.container}>
-        <Feather name="sun" size={100} color={'black'} />
-        <Text style={styles.temp}>6</Text>
-        <Text style={styles.feels}>Feels like 5</Text>
+        <Feather name={weatherType[condition].icon} size={100} color={'white'} />
+        <Text style={styles.temp}>{temp}</Text>
+        <Text style={styles.feels}>Feels like {feels_like}</Text>
         <RowText
           containerStyle={styles.highlowWrapper}
           text1Style={styles.highlow}
           text2Style={styles.highlow}
-          text1={'High: 8'}
-          text2={'Low: 6'}
+          text1={`High: ${temp_max}`}
+          text2={`Low: ${temp_min}`}
         />
       </View>
       <RowText
         containerStyle={styles.bodyWrapper}
         text1Style={styles.description}
         text2Style={styles.message}
-        text1={'Its sunny'}
-        text2={'Its perfect t-shirt weather'}
+        text1={weather[0].description}
+        text2={weatherType[condition].message}
       />
-    </SafeAreaView>
+    </SafeAreaView >
   )
 }
 
